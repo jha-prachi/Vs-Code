@@ -3,8 +3,10 @@ require('jstree');
 const nodePath = require('path');
 const fs = require('fs');
 
-$(document).ready(function () {
+$(document).ready(async function () {
 
+    let editor = await createEditor();
+    console.log(editor);
 
     let currPath = process.cwd();
     console.log(currPath);
@@ -28,16 +30,18 @@ $(document).ready(function () {
             "data": data
         }
     }).on('open_node.jstree', function (e, data) {
-        console.log(data.node.children);
+        // console.log(data.node.children);
 
         data.node.children.forEach(function (child) {
 
             let childDirectories = getCurrentDirectories(child);
+            console.log('child directories are ');
+            console.log(childDirectories);
 
-            childDirectories.forEach(function (directory) {
-
-                $('#jstree').jstree().create_node(child, directory, "last");
-            })
+            for (let i = 0; i < childDirectories.length; i++) {
+                let grandChild = childDirectories[i];
+                $('#jstree').jstree().create_node(child, grandChild, "last");
+            }
 
         })
     });
@@ -55,7 +59,7 @@ function getCurrentDirectories(path) {
     }
 
     let files = fs.readdirSync(path);
-    console.log(files);
+    // console.log(files);
 
     let rv = [];
     for (let i = 0; i < files.length; i++) {
@@ -69,4 +73,27 @@ function getCurrentDirectories(path) {
     }
 
     return rv;
+}
+
+function createEditor() {
+
+    return new Promise(function (resolve, reject) {
+        let monacoLoader = require('./node_modules/monaco-editor/min/vs/loader.js');
+
+        monacoLoader.require.config({ paths: { 'vs': './node_modules/monaco-editor/min/vs' } });
+
+        monacoLoader.require(['vs/editor/editor.main'], function () {
+            var editor = monaco.editor.create(document.getElementById('editor'), {
+                value: [
+                    'function x() {',
+                    '\tconsole.log("Hello world!");',
+                    '}'
+                ].join('\n'),
+                language: 'javascript'
+            });
+
+            resolve(editor);
+        });
+    })
+
 }
