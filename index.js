@@ -1,5 +1,6 @@
-const $ = require('jquery');
+const $ = jQuery = require('jquery');
 require('jstree');
+require('jquery-ui-dist/jquery-ui')
 const nodePath = require('path');
 const fs = require('fs');
 var os = require('os');
@@ -36,6 +37,18 @@ $(document).ready(async function () {
     let currPath = process.cwd();
     // console.log(currPath);
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    //tabs work
+
+
+    let tabs = $("#tabs").tabs();
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
     let data = [];
     let baseobj = {
         id: currPath,
@@ -71,6 +84,9 @@ $(document).ready(async function () {
         })
     }).on("select_node.jstree", function (e, data) {
         console.log(data.node.id);
+
+        openFile(data.node.id);
+
         updateEditor(data.node.id);
 
     });
@@ -96,7 +112,24 @@ $(document).ready(async function () {
 
     }
 
+    function openFile(path) {
+
+        let fileName = getNameFrompath(path);
+
+        let label = fileName;
+        let id = path;
+        let tabTemplate = "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>";
+        let li = $(tabTemplate.replace(/#\{href\}/g, "#" + id).replace(/#\{label\}/g, label));
+
+        tabs.find(".ui-tabs-nav").append(li);
+        tabs.append("<div id='" + id + "'></div>");
+        tabs.tabs("refresh");
+
+    }
+
 })
+
+
 
 
 

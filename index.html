@@ -4,13 +4,18 @@
     <title>VS-Code</title>
     <link rel="stylesheet" href="./node_modules/xterm/css/xterm.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <link rel="stylesheet" href="./node_modules/jquery-ui-dist/jquery-ui.css" />
     <link rel="stylesheet" href="./index.css">
 </head>
 
 <body>
 
     <div id="container">
-        <div id="top-bar">top-bar</div>
+        <div id="top-bar">
+            <div id="tabs">
+                <ul></ul>
+            </div>
+        </div>
         <div id="main-window">
 
             <div id="explorer">
@@ -25,5 +30,6 @@
 
 </body>
 <script src="./node_modules/xterm/lib/xterm.js"></script>
+
 <script src="./index.js"></script>
 </html>
